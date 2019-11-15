@@ -18,6 +18,7 @@ typedef unsigned long	cell;
 #define TRUE	1
 #define FALSE	0
 
+#define BEL	'\007'
 #define ESC	'\033'
 #define SO	'\016'
 #define SI	'\017'
@@ -74,6 +75,7 @@ void	clearscr();
 void	sepline();
 void	flush();
 void	flushline();
+int	cstring();
 
 int
 main(ac, av)
@@ -413,6 +415,11 @@ FILE	*fp;
 				break;
 			case '[':
 				if (csi(fp) == EOF)
+					goto done;
+				break;
+			case 'P': /* DCS */
+			case ']': /* OSC */
+				if (cstring(fp) == EOF)
 					goto done;
 				break;
 			default:
@@ -863,4 +870,35 @@ int	n;
 	if (keepgr && (rev || ul))
 		printf("\033[m");
 	putchar('\n');
+}
+
+int
+cstring(fp)
+FILE	*fp;
+{
+	int	c, esc = FALSE;
+
+	c = getc(fp);
+	if (c == EOF)
+		return EOF;
+
+	for (;;) {
+		if (c == ESC) {
+			esc = TRUE;
+		}
+		else if (c == BEL) {
+			break;
+		}
+		else if (esc) {
+			if (c == '\\') {
+				break;
+			}
+			esc = FALSE;
+		}
+		c = getc(fp);
+		if (c == EOF)
+			return EOF;
+	}
+
+	return 0;
 }
