@@ -11,6 +11,7 @@ char	*version  = "0.1";
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <unistd.h>
 
 typedef unsigned long	cell;
 
