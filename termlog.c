@@ -442,7 +442,7 @@ csi(fp)
 FILE	*fp;
 {
 	int	c, i, j, k, n, np, p[10];
-	int	leader;
+	int	leader, ich = '\0';
 	cell	*tmp;
 
 	c = getc(fp);
@@ -467,12 +467,19 @@ FILE	*fp;
 		}
 		if (np < 10)
 			p[np++] = n;
-		if (c != ';')
+		if (' ' <= c && c <= '/') {
+			ich = c;
+		}
+		else if (c != ';')
 			break;
 		c = getc(fp);
 		if (c == EOF)
 			return EOF;
 	}
+
+	if (ich)
+		return 0;
+
 	switch (c) {
 	case 'H': /* move cursor */
 	case 'f': /* move cursor */
