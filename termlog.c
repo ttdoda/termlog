@@ -62,6 +62,8 @@ int	lin, col, attr;
 int	savelin, savecol, saveattr;
 int	scrtop, scrend;
 
+int	nlmode = FALSE;
+
 int	verbose = FALSE;
 int	keepgr = FALSE;
 
@@ -150,6 +152,9 @@ char	***avp;
 		case 'm':
 			keepgr = TRUE;
 			break;
+		case 'n':
+			nlmode = TRUE;
+			break;
 		case 'v':
 			verbose = TRUE;
 			break;
@@ -188,11 +193,12 @@ done:
 void
 usage()
 {
-	printf("Usage: %s [-gCOLSxLINES] [-k[ejs]] [-m] [-v] file ...\n", progname);
+	printf("Usage: %s [-gCOLSxLINES] [-k[ejs]] [-m] [-n] [-v] file ...\n", progname);
 	printf("Options:\n");
 	printf("    -g: set screen size (default: -g80x24)\n");
 	printf("    -k: set input code (don't care if no kana exists)\n");
 	printf("    -m: retain graphic renditions (reverse, underline)\n");
+	printf("    -n: new-line mode\n");
 	printf("    -v: verbose output\n");
 
 }
@@ -301,6 +307,9 @@ FILE	*fp;
 				lin = scrend - 1;
 			} else if (lin == lines) {
 				lin = lines - 1;
+			}
+			if (nlmode) {
+				col = 0;
 			}
 			break;
 		case '\t': /* tab */
@@ -442,7 +451,7 @@ csi(fp)
 FILE	*fp;
 {
 	int	c, i, j, k, n, np, p[10];
-	int	leader, ich = '\0';
+	int	leader = '\0', ich = '\0';
 	cell	*tmp;
 
 	c = getc(fp);
@@ -682,7 +691,22 @@ FILE	*fp;
 		attr = saveattr;
 		break;
 	case 'h': /* set mode */
+		if (leader == '\0') {
+			for (i=0; i<np; i++) {
+				if (p[i] == 20) {
+					nlmode = TRUE;
+				}
+			}
+		}
+		break;
 	case 'l': /* reset mode */
+		if (leader == '\0') {
+			for (i=0; i<np; i++) {
+				if (p[i] == 20) {
+					nlmode = FALSE;
+				}
+			}
+		}
 		break;
 	default:
 		break;
