@@ -221,7 +221,7 @@ FILE	*fp;
 	clearscr();
 
 	while ((c = getc(fp)) != EOF) {
-		if (c >= ' ' && c < DEL || (c & 0x80)) {
+		if ((c >= ' ' && c < DEL) || (c & 0x80)) {
 		retry:
 			if (col >= cols) {
 				lin++;
@@ -233,9 +233,9 @@ FILE	*fp;
 				}
 				col = 0;
 			}
-			if (kcode == KC_EUC && c >= 0xa1 && c <= 0xfe ||
-			    kcode == KC_SJIS && SJIS1(c) ||
-			    kcode == KC_NONE && c >= 0x81 && c <= 0xfe ||
+			if ((kcode == KC_EUC && c >= 0xa1 && c <= 0xfe) ||
+			    (kcode == KC_SJIS && SJIS1(c)) ||
+			    (kcode == KC_NONE && c >= 0x81 && c <= 0xfe) ||
 			    mode == M_KANJI) {
 				if (col == cols - 1) {
 					if (verbose && !flushed &&
@@ -809,7 +809,7 @@ int	n;
 		if (keepgr) {
 			newrev = (cl & A_REV) != 0;
 			newul = (cl & A_UL) != 0;
-			if (rev && !newrev || ul && !newul)
+			if ((rev && !newrev) || (ul && !newul))
 				printf("\033[m");
 			if (!rev && newrev)
 				printf("\033[7m");
