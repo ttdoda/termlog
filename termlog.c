@@ -1,11 +1,12 @@
 /*
- * termlog v0.1 - rearrange and serialize VT100/ANSI terminal screen log
+ * termlog v0.2 - rearrange and serialize VT100/ANSI terminal screen log
  *
  *	Written by Junn Ohta, 1997/02/18.  Public Domain.
+ *	Modified by IWAMOTO Kouichi, 2019/12/06.
  */
 
 char	*progname = "termlog";
-char	*version  = "0.1";
+char	*version  = "0.2";
 
 #include <stdio.h>
 #include <stdlib.h>

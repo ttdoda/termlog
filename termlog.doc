@@ -6,15 +6,16 @@ VT100/ANSI端末画面ログ整列/連続化ユーティリティー termlog 操
 	termlog - VT100またはANSI端末の画面ログを連続文字データにする
 
 バージョン
-	0.1 - 1997/02/18
+	0.2 - 2019/12/06
 
 形式
-	termlog [-gCOLSxLINES] [-k[ejs]] [-m] [-v] file ...
+	termlog [-gCOLSxLINES] [-k[ejs]] [-m] [-n] [-v] file ...
 
 オプション
 	-g	画面サイズを指定する(既定値: -g80x24)
 	-k	入力の日本語コード(「半角カナ」がなければ指定不要)
 	-m	表示属性(反転、下線)制御シーケンスを保存する
+	-n	ANSI New-Lineモードの初期値を設定状態にする
 	-v	小規模の画面更新でも内容を出力する
 	file	画面制御シーケンスを含む端末画面ログファイル
 
@@ -63,6 +64,10 @@ VT100/ANSI端末画面ログ整列/連続化ユーティリティー termlog 操
 	含む入力を扱えるテキストブラウザー(lessなど)で出力を眺める場合には便
 	利かもしれない。
 
+	-nオプションを指定すると、ANSI New-Lineモードの初期値を設定状態に変
+	変更する。ログファイルの内容が壊れていて、改行がLFのみとなっている場
+	合には便利かもしれない。
+
 画面制御シーケンス
 	termlogが解釈する特殊文字、画面制御シーケンスは次のものである。
 
@@ -92,6 +97,8 @@ VT100/ANSI端末画面ログ整列/連続化ユーティリティー termlog 操
 	  ESC [ Pn M		カーソル位置以降のPn行を削除する(ANSI)
 	  ESC [ Pn P		カーソル位置以降のPnカラムを削除する
 	  ESC [ Pm ; Pn f	ESC [ Pm ; Pn H と同じ
+	  ESC [ 20 h		ANSI New-Line Mode に設定する
+	  ESC [ 20 l		ANSI New-Line Mode を解除する
 	  ESC [ 7 m		反転表示属性を設定する
 	  ESC [ 4 m		下線表示属性を設定する
 	  ESC [ m		表示属性を解除する
@@ -115,6 +122,7 @@ VT100/ANSI端末画面ログ整列/連続化ユーティリティー termlog 操
 	termlog.cはSunOS4.13上のccおよびgcc、SunOS5.上3のcc、MS-DOS上のTurbo
 	C++ 1.0およびLSI C-86 v3.30c試食版で動作を確認した。それ以外の処理系
 	でもおそらく変更の必要なしにコンパイルできると思われる。
+	v0.2はFreeBSD 12.0上のclang、cygwin上のgccで動作を確認した。
 
 バグ
 	このプログラムは即席で作られ、しかもあまりテストされていない。バグや
@@ -143,7 +151,15 @@ VT100/ANSI端末画面ログ整列/連続化ユーティリティー termlog 操
 	Internet: o...@src.ricoh.co.jp
 	NIFTY-Serve: JCF00656
 
+改変者
+	いわもと こういち (IWAMOTO Kouichi)
+	https://osdn.net/users/doda/
+	https://github.com/ttdoda/
+	Twitter: @ttdoda
+
 履歴
+	詳細はCHANGELOG.mdを参照
 	1997/02/18 - テスト版(v0.1)をリリース
+	2019/12/06 - v0.2をリリース
 
 ============================================================================
